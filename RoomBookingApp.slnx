@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="RoomBookingApp.Core.Test/RoomBookingApp.Core.Test.csproj" />
+  <Project Path="RoomBookingApp.Core/RoomBookingApp.Core.csproj" />
+</Solution>
