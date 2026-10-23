@@ -1,4 +1,7 @@
 <Solution>
   <Project Path="RoomBookingApp.Core.Test/RoomBookingApp.Core.Test.csproj" />
   <Project Path="RoomBookingApp.Core/RoomBookingApp.Core.csproj" />
+  <Project Path="RoomBookingApp.Domain/RoomBookingApp.Domain.csproj" Id="dc9b6547-e328-47a2-92bf-86c126844bb2" />
+  <Project Path="RoomBookingApp.Persistence.Test/RoomBookingApp.Persistence.Test.csproj" Id="20ac6e3a-7b7f-481b-bd02-2ceb22f7586b" />
+  <Project Path="RoomBookingApp.Persistence/RoomBookingApp.Persistence.csproj" Id="895a4c9d-8bbd-42c6-9bd1-e5a6300c9186" />
 </Solution>
