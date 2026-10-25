@@ -248,12 +248,12 @@ RoomBookingApp_TDD
 
 ## Roadmap
 
-- [ ] GitHub Actions pipeline that runs the tests on every push and pull request
-- [ ] Branch protection so failing tests block merges
-- [ ] End-to-end API tests with `WebApplicationFactory`
-- [ ] Async data access
-- [ ] Persistent database (SQL Server) with migrations
-- [ ] Code coverage report
+- [x] GitHub Actions pipeline that runs the tests on every push and pull request
+- [x] Branch protection so failing tests block merges
+- [x] End-to-end API tests with `WebApplicationFactory`
+- [x] Async data access
+- [x] Persistent database (SQL Server) with migrations
+- [x] Code coverage report
 
 ---
 
