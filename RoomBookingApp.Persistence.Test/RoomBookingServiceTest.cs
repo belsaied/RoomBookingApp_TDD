@@ -5,8 +5,7 @@ using RoomBookingApp.Persistence.Repositories;
 namespace RoomBookingApp.Persistence.Test
 {
     public class RoomBookingServiceTest
-    { 
-
+    {
         [Fact]
         public void Should_Return_Available_Rooms()
         {
@@ -37,7 +36,6 @@ namespace RoomBookingApp.Persistence.Test
             Assert.Contains(availableRooms, r => r.Id == 3);
         }
 
-
         [Fact]
         public void Should_Save_Room_Booking()
         {
@@ -53,8 +51,9 @@ namespace RoomBookingApp.Persistence.Test
 
             using var context = new RoomBookingAppDbContext(dbOptions);
             var roomBookingService = new RoomBookingService(context);
-            roomBookingService.Save(roomBooking);
 
+            // act
+            roomBookingService.Save(roomBooking);
             var bookings = context.RoomBookings.ToList();
             var booking = Assert.Single(bookings);
 

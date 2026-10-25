@@ -1,4 +1,6 @@
 <Solution>
+  <Project Path="RoomBookingApp.API.Tests/RoomBookingApp.API.Tests.csproj" Id="7605162b-d004-4407-b452-13211492924e" />
+  <Project Path="RoomBookingApp.API/RoomBookingApp.API.csproj" Id="8d26a568-d179-45af-b547-3dca8581bdaf" />
   <Project Path="RoomBookingApp.Core.Test/RoomBookingApp.Core.Test.csproj" />
   <Project Path="RoomBookingApp.Core/RoomBookingApp.Core.csproj" />
   <Project Path="RoomBookingApp.Domain/RoomBookingApp.Domain.csproj" Id="dc9b6547-e328-47a2-92bf-86c126844bb2" />
