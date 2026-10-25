@@ -2,15 +2,37 @@
 
 # Room Booking API
 
-**A test-driven ASP.NET Core Web API where every behavior started as a failing test.**
+### A test-driven ASP.NET Core Web API where every behavior started as a failing test.
+
+<br/>
 
 ![.NET](https://img.shields.io/badge/.NET-9.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
 ![C#](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white)
-![EF Core](https://img.shields.io/badge/EF%20Core-9.0-512BD4?style=for-the-badge)
-![xUnit](https://img.shields.io/badge/xUnit-tested-5E1F87?style=for-the-badge)
-![Tests](https://img.shields.io/badge/tests-13%20cases-2EA44F?style=for-the-badge)
+![EF Core](https://img.shields.io/badge/EF%20Core-9.0-512BD4?style=for-the-badge&logo=nuget&logoColor=white)
+![xUnit](https://img.shields.io/badge/xUnit-5E1F87?style=for-the-badge&logo=xunit&logoColor=white)
+![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)
 
-[Overview](#overview) · [Architecture](#architecture) · [TDD in Action](#tdd-in-action) · [Test Suite](#test-suite) · [API](#api-reference) · [Getting Started](#getting-started)
+![Stars](https://img.shields.io/github/stars/belsaied/RoomBookingApp_TDD?style=for-the-badge&color=F5C542)
+![Last commit](https://img.shields.io/github/last-commit/belsaied/RoomBookingApp_TDD?style=for-the-badge&color=2EA44F)
+
+<br/>
+
+[![Overview](https://img.shields.io/badge/OVERVIEW-0D1117?style=for-the-badge)](#overview)
+[![Architecture](https://img.shields.io/badge/ARCHITECTURE-512BD4?style=for-the-badge)](#architecture)
+[![TDD](https://img.shields.io/badge/TDD%20IN%20ACTION-D73A49?style=for-the-badge)](#tdd-in-action)
+[![Tests](https://img.shields.io/badge/TEST%20SUITE-2EA44F?style=for-the-badge)](#test-suite)
+[![API](https://img.shields.io/badge/API-0969DA?style=for-the-badge)](#api-reference)
+[![Start](https://img.shields.io/badge/GET%20STARTED-F78166?style=for-the-badge)](#getting-started)
+
+</div>
+
+<br/>
+
+<div align="center">
+
+| 4 | 3 | 13 | .NET 9 |
+|:---:|:---:|:---:|:---:|
+| **Clean layers** | **Test projects** | **Test cases** | **Target framework** |
 
 </div>
 
@@ -18,14 +40,18 @@
 
 ## Overview
 
-Room Booking API lets a client book a conference room for a given date. The API checks which rooms are free, books the first available one, and returns a clear success or failure result.
+Room Booking API lets a client book a conference room for a given date. It checks which rooms are free, books the first available one, and returns a clear success or failure result.
 
-I built it to apply what I learned in **[Test Driven Development (TDD) in .NET](https://www.udemy.com/)** by Trevoir Williams, and to practice a mindset I care about: **AI can generate code quickly, but a developer has to be able to prove it is correct.** Here, the tests define the requirements first, and the code exists to satisfy them.
+I built it to apply what I learned in **Test Driven Development (TDD) in .NET** by Trevoir Williams, and to practice one idea:
+
+> AI can generate code in seconds, but a developer still has to prove it is correct.
+
+Here, the tests define the requirements first, and the code exists to satisfy them.
 
 **What this project demonstrates**
 
 - The Red, Green, Refactor cycle applied to real business rules
-- Business logic fully isolated from the database and the web layer
+- Business logic isolated from the database and the web layer
 - Unit tests, controller tests, and EF Core data-access tests in separate projects
 - Dependency inversion: the core defines the contracts, the outer layers implement them
 - Input validation built into the domain model
@@ -34,14 +60,14 @@ I built it to apply what I learned in **[Test Driven Development (TDD) in .NET](
 
 ## Architecture
 
-The solution is split into four layers plus three test projects. Dependencies point inward, so the business logic never depends on EF Core or ASP.NET.
+Four layers, three test projects. Dependencies point inward, so the business logic never depends on EF Core or ASP.NET.
 
 ```mermaid
 flowchart LR
-    API["<b>RoomBookingApp.API</b><br/>Controllers · Swagger · DI setup"]
-    Core["<b>RoomBookingApp.Core</b><br/>Booking logic · Service contracts"]
-    Persistence["<b>RoomBookingApp.Persistence</b><br/>EF Core · Data access"]
-    Domain["<b>RoomBookingApp.Domain</b><br/>Entities · Validation rules"]
+    API["<b>API</b><br/>Controllers · Swagger · DI"]
+    Core["<b>Core</b><br/>Booking logic · Contracts"]
+    Persistence["<b>Persistence</b><br/>EF Core · Data access"]
+    Domain["<b>Domain</b><br/>Entities · Validation"]
 
     API --> Core
     API --> Persistence
@@ -52,15 +78,15 @@ flowchart LR
 
 | Layer | Responsibility | Tested by |
 |---|---|---|
-| `RoomBookingApp.API` | HTTP endpoints, request validation, Swagger, dependency injection | `RoomBookingApp.API.Tests` |
-| `RoomBookingApp.Core` | `RoomBookingRequestProcessor` with the booking rules, plus `IRoomBookingService` | `RoomBookingApp.Core.Test` |
-| `RoomBookingApp.Persistence` | `RoomBookingService` and `RoomBookingAppDbContext` (EF Core) | `RoomBookingApp.Persistence.Test` |
+| `RoomBookingApp.API` | Endpoints, request validation, Swagger, dependency injection | `RoomBookingApp.API.Tests` |
+| `RoomBookingApp.Core` | `RoomBookingRequestProcessor` (booking rules) and `IRoomBookingService` | `RoomBookingApp.Core.Test` |
+| `RoomBookingApp.Persistence` | `RoomBookingService` and `RoomBookingAppDbContext` | `RoomBookingApp.Persistence.Test` |
 | `RoomBookingApp.Domain` | `Room`, `RoomBooking`, shared base model with validation | Covered through the layers above |
 
-### How a booking works
+**How a booking works**
 
 1. The client sends `POST /api/RoomBooking` with a name, email, and date.
-2. The controller validates the model (required fields, valid email, **date must be in the future**).
+2. The controller validates the model: required fields, valid email, and a date in the future.
 3. The processor asks `IRoomBookingService` for the rooms available on that date.
 4. If a room is free, the booking is saved against the first available room and the result is `Success` with a booking ID.
 5. If no room is free, the API returns `400 Bad Request` with `No Rooms Available For Given Date`.
@@ -69,12 +95,12 @@ flowchart LR
 
 ## TDD in Action
 
-Each rule below began as a test that failed, then got the smallest implementation to pass, then was refactored.
+Each rule began as a failing test, got the smallest implementation to pass, and was then refactored.
 
-| Requirement (written as a test first) | Test |
+| Requirement, written as a test first | Test |
 |---|---|
 | The result mirrors the request values | `Should_Return_RoomBooking_Response_With_Request_Values` |
-| A null request is rejected with a clear `ArgumentNullException` | `Should_Throw_ArgumentNullException_When_Request_Is_Null` |
+| A null request throws a clear `ArgumentNullException` | `Should_Throw_ArgumentNullException_When_Request_Is_Null` |
 | A booking is saved with the correct room | `Should_Save_RoomBooking_Request` |
 | Nothing is saved when no room is free | `Should_Not_Save_RoomBooking_Request_If_Room_Is_Unavailable` |
 | The result flag reflects success or failure | `Should_Return_SuccessOrFailure_Flag_In_Result` |
@@ -83,7 +109,7 @@ Each rule below began as a test that failed, then got the smallest implementatio
 | Only unbooked rooms are returned for a date | `Should_Return_Available_Rooms` |
 | A booking is persisted correctly | `Should_Save_Room_Booking` |
 
-A short example of the style, using Moq to isolate the unit and Shouldly for readable assertions:
+The style: Moq isolates the unit, Shouldly keeps assertions readable.
 
 ```csharp
 [Fact]
@@ -101,21 +127,19 @@ public void Should_Not_Save_RoomBooking_Request_If_Room_Is_Unavailable()
 
 ## Test Suite
 
-**10 test methods, 13 test cases, across 3 test projects.**
+**10 test methods and 13 test cases across 3 projects.**
 
 | Project | Type | Techniques |
 |---|---|---|
-| `RoomBookingApp.Core.Test` | Unit tests | xUnit `[Fact]` and `[Theory]`, Moq mocks with callbacks and `Verify`, Shouldly assertions |
-| `RoomBookingApp.API.Tests` | Controller tests | `[Theory]` with `[InlineData]` covering valid and invalid model states, verifying the correct `IActionResult` type and call count |
+| `RoomBookingApp.Core.Test` | Unit tests | `[Fact]` and `[Theory]`, Moq mocks with callbacks and `Verify`, Shouldly |
+| `RoomBookingApp.API.Tests` | Controller tests | `[Theory]` with `[InlineData]` for valid and invalid model states, checking the result type and call count |
 | `RoomBookingApp.Persistence.Test` | Data-access tests | EF Core InMemory provider to test real queries and saves without a database server |
 
-**Testing approach**
+**Approach**
 
-- **Unit tests** mock the data service so the booking rules are tested in isolation, with no database involved.
-- **Theories** cover several scenarios (success and failure, valid and invalid) with a single test body.
+- **Unit tests** mock the data service, so the booking rules are tested with no database involved.
+- **Theories** cover several scenarios (success and failure, valid and invalid) with one test body.
 - **Data-access tests** run real EF Core queries, because mocks cannot catch query or mapping mistakes.
-
-Run everything:
 
 ```bash
 dotnet test RoomBookingApp.slnx
@@ -171,12 +195,12 @@ The app seeds three rooms (Conference Room A, B, and C), so the **fourth** booki
 
 ## Getting Started
 
-**Prerequisites:** [.NET 9 SDK](https://dotnet.microsoft.com/download)
+**Prerequisite:** [.NET 9 SDK](https://dotnet.microsoft.com/download)
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/<your-username>/<your-repo-name>.git
-cd <your-repo-name>
+git clone https://github.com/belsaied/RoomBookingApp_TDD.git
+cd RoomBookingApp_TDD
 
 # 2. Run the tests
 dotnet test RoomBookingApp.slnx
@@ -187,7 +211,7 @@ dotnet run --project RoomBookingApp.API
 
 Then open **http://localhost:5103/swagger** and try the `POST /api/RoomBooking` endpoint.
 
-> The API uses an in-memory SQLite database, so data resets every time the app restarts. This keeps the project easy to run with zero setup.
+> The API uses an in-memory SQLite database, so data resets on every restart. This keeps the project runnable with zero setup.
 
 ---
 
@@ -205,7 +229,7 @@ Then open **http://localhost:5103/swagger** and try the `POST /api/RoomBooking` 
 ## Project Structure
 
 ```
-RoomBookingApp
+RoomBookingApp_TDD
 ├── RoomBookingApp.API                # Controllers, Program.cs, Swagger
 ├── RoomBookingApp.API.Tests          # Controller tests
 ├── RoomBookingApp.Core               # Business logic and service contracts
@@ -233,10 +257,15 @@ RoomBookingApp
 
 ---
 
-## About
+<div align="center">
 
-Built by **[Belal Saied](www.linkedin.com/in/belal-saied)** while moving from software engineer toward product engineer: owning a feature from requirement through to tested, reliable delivery.
+### Built by [belsaied](https://github.com/belsaied)
 
-Course: *Test Driven Development (TDD) in .NET* by Trevoir Williams on Udemy.
+Moving from software engineer to product engineer: owning a feature from requirement to tested, reliable delivery.
 
-If this project was useful, a star on the repo is appreciated.
+Course: *Test Driven Development (TDD) in .NET* by Trevoir Williams on Udemy
+
+[![LinkedIn](https://img.shields.io/badge/Connect%20on%20LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/your-profile)
+[![Star](https://img.shields.io/badge/Star%20this%20repo-F5C542?style=for-the-badge&logo=github&logoColor=black)](https://github.com/belsaied/RoomBookingApp_TDD)
+
+</div>
